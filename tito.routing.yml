@@ -1,0 +1,9 @@
+tito.settings:
+  path: '/admin/config/tito/settings'
+  defaults:
+    _form: '\Drupal\tito\Form\TitoSettings'
+    _title: 'Tito'
+  requirements:
+    _permission: 'access administration pages'
+  options:
+    _admin_route: TRUE
