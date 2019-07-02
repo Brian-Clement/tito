@@ -1,0 +1,6 @@
+tito.settings:
+  title: 'Tito'
+  route_name: tito.settings
+  description: 'Manage Tito settings'
+  parent: system.admin_config_services
+  weight: 99
