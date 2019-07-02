@@ -42,7 +42,7 @@ class TitoSettings extends ConfigFormBase {
     $form['tito_api_token'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Tito API Key'),
-      '#description' => $this->t('Enter your Eventbrite API token'),
+      '#description' => $this->t('Enter your Tito API token'),
       '#maxlength' => 64,
       '#size' => 64,
       '#default_value' => $config->get('tito_api_token'),
