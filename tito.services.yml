@@ -1,0 +1,4 @@
+services:
+  tito.client:
+    class: Drupal\tito\Client
+    arguments: ["@config.factory", "@cache.default", "@logger.factory", "@messenger"]
