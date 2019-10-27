@@ -2,12 +2,10 @@
     "name": "tito",
     "type": "drupal-module",
     "description": "Tito",
-    "keywords": [
-    ],
-    "homepage": "https://www.drupal.org/project/tito",
+    "keywords": ["Drupal"],
     "minimum-stability": "dev",
     "support": {
         "issues": "https://www.drupal.org/project/issues/tito",
-        "source": "http://cgit.drupalcode.org/tito",
+        "source": "http://cgit.drupalcode.org/tito"
     },
 }
