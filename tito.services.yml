@@ -1,0 +1,10 @@
+services:
+  tito.client:
+    class: Drupal\tito\Client
+    arguments: ["@config.factory", "@cache.default", "@logger.factory", "@messenger"]
+  tito.event:
+    class: Drupal\tito\EventService
+    arguments: ["@tito.client", "@logger.factory"]
+  tito.tickets:
+    class: Drupal\tito\TicketService
+    arguments: ['@tito.client', '@logger.factory']
