@@ -5,6 +5,8 @@ namespace Drupal\tito;
 use Drupal\Core\Config\ConfigFactory;
 use Drupal\Core\Logger\LoggerChannelFactoryInterface;
 use Drupal\Core\Cache\CacheBackendInterface;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\Core\StringTranslation\TranslationInterface;
 use GuzzleHttp\Client as GuzzleClient;
 use Drupal\Core\Url;
 use Drupal\Core\Messenger\MessengerInterface;
@@ -17,6 +19,8 @@ use Drupal\Component\Serialization\Json;
  * @package Drupal\tito
  */
 class Client {
+
+  use StringTranslationTrait;
 
   /**
    * A configuration instance.
@@ -53,11 +57,13 @@ class Client {
    * @param \Drupal\Core\Cache\CacheBackendInterface $cacheBackend
    * @param \Drupal\Core\Logger\LoggerChannelFactoryInterface $loggerFactory
    * @param \Drupal\Core\Messenger\MessengerInterface $messenger
+   * @param \Drupal\Core\StringTranslation\TranslationInterface $string_translation
    */
   public function __construct(ConfigFactory $config_factory,
                               CacheBackendInterface $cacheBackend,
                               LoggerChannelFactoryInterface $loggerFactory,
-                              MessengerInterface $messenger) {
+                              MessengerInterface $messenger,
+                              TranslationInterface $string_translation) {
 
     // Fetch Tito settings.
     $this->config = $config_factory->get('tito.settings');
@@ -69,10 +75,9 @@ class Client {
     ]);
 
     $this->loggerFactory = $loggerFactory;
-
     $this->cacheBackend = $cacheBackend;
-
     $this->messenger = $messenger;
+    $this->stringTranslation = $string_translation;
   }
 
   /**
@@ -109,7 +114,7 @@ class Client {
    *
    * @param string $url
    *   Url.
-   * @param string $parameters
+   * @param mixed $parameters
    *   Parameters.
    * @param string $requestMethod
    *   Request method.
@@ -147,6 +152,7 @@ class Client {
       $this->loggerFactory->get('tito')->error("@message", ['@message' => $e->getMessage()]);
       return FALSE;
     }
+    return FALSE;
   }
 
   /**
