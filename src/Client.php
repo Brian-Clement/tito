@@ -124,11 +124,12 @@ class Client {
    */
   private function doRequest($url, string $parameters = NULL, $requestMethod = 'GET') {
     if ($this->token == "") {
-      $errorMessage = $this->t('Tito API Access Token is not set. It can be set on the <a href=":config_page">configuration page</a>.',
-        [':config_page' => Url::fromRoute('tito.settings')]
+      $errorMessage = $this->t('Tito API Access Token is not set. It can be set on the <a href="@config_page">configuration page</a>.',
+        ['@config_page' => Url::fromRoute('tito.settings')->toString()]
       );
 
       $this->messenger->addMessage($errorMessage, 'error');
+      \Drupal::logger('tito')->error($errorMessage);
       return FALSE;
     }
     try {
