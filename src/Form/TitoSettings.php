@@ -6,7 +6,7 @@ use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
 
 /**
- * Class TitoSettings.
+ * Tito settings form.
  */
 class TitoSettings extends ConfigFormBase {
 
@@ -54,13 +54,6 @@ class TitoSettings extends ConfigFormBase {
   /**
    * {@inheritdoc}
    */
-  public function validateForm(array &$form, FormStateInterface $form_state) {
-    parent::validateForm($form, $form_state);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     parent::submitForm($form, $form_state);
 
@@ -69,4 +62,5 @@ class TitoSettings extends ConfigFormBase {
       ->set('tito_api_token', $form_state->getValue('tito_api_token'))
       ->save();
   }
+
 }

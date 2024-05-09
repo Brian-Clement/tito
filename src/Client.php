@@ -2,19 +2,19 @@
 
 namespace Drupal\tito;
 
+use Drupal\Component\Serialization\Json;
+use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Config\ConfigFactory;
 use Drupal\Core\Logger\LoggerChannelFactoryInterface;
-use Drupal\Core\Cache\CacheBackendInterface;
+use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\StringTranslation\TranslationInterface;
-use GuzzleHttp\Client as GuzzleClient;
 use Drupal\Core\Url;
-use Drupal\Core\Messenger\MessengerInterface;
+use GuzzleHttp\Client as GuzzleClient;
 use GuzzleHttp\Exception\GuzzleException;
-use Drupal\Component\Serialization\Json;
 
 /**
- * Class Client.
+ * The API Client.
  *
  * @package Drupal\tito
  */
@@ -25,9 +25,30 @@ class Client {
   /**
    * A configuration instance.
    *
-   * @var \Drupal\Core\Config\ConfigFactory;
+   * @var \Drupal\Core\Config\ConfigFactory
    */
   protected $config;
+
+  /**
+   * The API base URI.
+   *
+   * @var string
+   */
+  protected $baseUri;
+
+  /**
+   * The API token.
+   *
+   * @var string
+   */
+  protected $token;
+
+  /**
+   * The API token.
+   *
+   * @var \GuzzleHttp\ClientInterface
+   */
+  protected $guzzleClient;
 
   /**
    * Logger Factory.
@@ -54,24 +75,31 @@ class Client {
    * Constructs the Client.
    *
    * @param \Drupal\Core\Config\ConfigFactory $config_factory
+   *   The config factory.
    * @param \Drupal\Core\Cache\CacheBackendInterface $cacheBackend
+   *   The cache backend.
    * @param \Drupal\Core\Logger\LoggerChannelFactoryInterface $loggerFactory
+   *   The logger factory.
    * @param \Drupal\Core\Messenger\MessengerInterface $messenger
+   *   The messenger service.
    * @param \Drupal\Core\StringTranslation\TranslationInterface $string_translation
+   *   The translation service.
    */
-  public function __construct(ConfigFactory $config_factory,
-                              CacheBackendInterface $cacheBackend,
-                              LoggerChannelFactoryInterface $loggerFactory,
-                              MessengerInterface $messenger,
-                              TranslationInterface $string_translation) {
+  public function __construct(
+    ConfigFactory $config_factory,
+    CacheBackendInterface $cacheBackend,
+    LoggerChannelFactoryInterface $loggerFactory,
+    MessengerInterface $messenger,
+    TranslationInterface $string_translation,
+  ) {
 
     // Fetch Tito settings.
     $this->config = $config_factory->get('tito.settings');
-    $this->base_uri = $this->config->get('tito_api_url');
+    $this->baseUri = $this->config->get('tito_api_url');
     $this->token = $this->config->get('tito_api_token');
 
     $this->guzzleClient = new GuzzleClient([
-      'base_uri' => $this->base_uri,
+      'base_uri' => $this->baseUri,
     ]);
 
     $this->loggerFactory = $loggerFactory;
@@ -84,15 +112,20 @@ class Client {
    * Construct a Guzzle request.
    *
    * @param string $requestMethod
+   *   The HTTP request method.
    * @param string $uri
+   *   The request URI.
    * @param string $args
+   *   Request arguments.
    * @param bool $cacheable
+   *   Whether or not to cache the response.
    *
-   * @return array|bool
+   * @return array<mixed>|bool
+   *   False or array.
    */
   public function request($requestMethod, string $uri = '', string $args = '', $cacheable = TRUE) {
-    // Minimally use the base URI
-    $url = $this->base_uri;
+    // Minimally use the base URI.
+    $url = $this->baseUri;
 
     // Include the endpoint.
     if ($uri) {
@@ -119,7 +152,7 @@ class Client {
    * @param string $requestMethod
    *   Request method.
    *
-   * @return bool|array
+   * @return bool|array<mixed>
    *   False or array.
    */
   private function doRequest($url, string $parameters = NULL, $requestMethod = 'GET') {
@@ -129,7 +162,7 @@ class Client {
       );
 
       $this->messenger->addMessage($errorMessage, 'error');
-      \Drupal::logger('tito')->error($errorMessage);
+      $this->loggerFactory->get('tito')->error("@message", ['@message' => $errorMessage]);
       return FALSE;
     }
     try {
@@ -160,8 +193,10 @@ class Client {
    * Construct options for Guzzle request.
    *
    * @param string $parameters
+   *   Query parameters for the request.
    *
-   * @return array.
+   * @return array<mixed>
+   *   The array of options data.
    */
   protected function buildOptions(string $parameters) {
     $options = [];
@@ -173,6 +208,5 @@ class Client {
 
     return $options;
   }
-
 
 }

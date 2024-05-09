@@ -2,11 +2,11 @@
 
 namespace Drupal\tito;
 
-use Drupal\tito\Client;
 use Drupal\Core\Logger\LoggerChannelFactoryInterface;
+use Drupal\tito\Client;
 
 /**
- * Class TicketService.
+ * Retrieve tickets from Tito API.
  */
 class TicketService {
 
@@ -32,6 +32,17 @@ class TicketService {
     $this->loggerFactory = $logger_factory;
   }
 
+  /**
+   * Fetch tickets.
+   *
+   * @param string $account
+   *   The Tito account.
+   * @param string $event
+   *   The Tito event.
+   *
+   * @return array<mixed>|bool
+   *   The API response, or FALSE.
+   */
   public function getTickets($account, $event) {
     // Construct the URI.
     $uri = $account . '/' . $event . '/tickets';

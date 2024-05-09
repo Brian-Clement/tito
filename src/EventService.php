@@ -2,11 +2,11 @@
 
 namespace Drupal\tito;
 
-use Drupal\tito\Client;
 use Drupal\Core\Logger\LoggerChannelFactoryInterface;
+use Drupal\tito\Client;
 
 /**
- * Class EventService.
+ * Fetches event details.
  */
 class EventService {
 
@@ -36,12 +36,12 @@ class EventService {
    * Request details about an event.
    *
    * @param string $account
-   *   Account
-   *
+   *   The Tito account.
    * @param string $event
-   *   Event
+   *   The Tito event.
    *
-   * @return void
+   * @return array<mixed>|bool
+   *   The API response, or FALSE.
    */
   public function eventRequest($account, $event) {
     // Construct the URI.
