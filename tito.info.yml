@@ -1,5 +1,5 @@
 name: 'Tito'
 type: module
 description: 'Tito'
-core_version_requirement: ^8 || ^9
-package: 'Custom'
+core_version_requirement: ^9 || ^10
+package: 'Tito'
